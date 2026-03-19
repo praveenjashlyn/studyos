@@ -51,4 +51,36 @@ $$;
 
 CALL get_employees_by_dept(1);
 
-d)
+d)function to get employee count in a department
+
+CREATE OR REPLACE FUNCTION count_employees(p_dept_id INT)
+RETURNS INT
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    total INT;
+BEGIN
+    SELECT COUNT(*) INTO total
+    FROM employee
+    WHERE dept_id = p_dept_id;
+
+    RETURN total;
+END;
+$$;
+
+e)Total working hours of an employee
+
+CREATE OR REPLACE FUNCTION total_hours(p_empid INT)
+RETURNS NUMERIC
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    total NUMERIC;
+BEGIN
+    SELECT COALESCE(SUM(hours), 0) INTO total
+    FROM works_on
+    WHERE empid = p_empid;
+
+    RETURN total;
+END;
+$$;
