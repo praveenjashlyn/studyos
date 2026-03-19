@@ -1,0 +1,54 @@
+a) UPDATE SALARY
+
+CREATE OR REPLACE PROCEDURE update_salary(
+    p_empid INT,
+    p_new_salary NUMERIC
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE employee
+    SET salary = p_new_salary
+    WHERE empid = p_empid;
+END;
+$$;
+
+CALL update_salary(101, 50000);
+
+b)Assign Employee to a project
+  
+  CREATE OR REPLACE PROCEDURE assign_project(
+    p_empid INT,
+    p_project_id INT,
+    p_hours NUMERIC
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO works_on(empid, project_id, hours)
+    VALUES (p_empid, p_project_id, p_hours);
+END;
+$$;
+
+CALL assign_project(101, 10, 20);
+
+c)Display employees in a department using procedure 
+
+CREATE OR REPLACE PROCEDURE get_employees_by_dept(p_dept_id INT)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    rec RECORD;
+BEGIN
+    FOR rec IN 
+        SELECT * FROM employee WHERE dept_id = p_dept_id
+    LOOP
+        RAISE NOTICE 'ID: %, Name: %, Salary: %',
+            rec.emp_id, rec.emp_name, rec.salary;
+    END LOOP;
+END;
+$$;
+
+CALL get_employees_by_dept(1);
+
+d)
